@@ -51,6 +51,9 @@ export interface Credential {
   /** Custom tags */
   tags?: string[];
 
+  /** Custom metadata (key-value pairs for additional info) */
+  metadata?: Record<string, string>;
+
   /** Expiration date */
   expiresAt?: Date;
   /** Days until rotation reminder */
@@ -119,6 +122,8 @@ export interface CreateCredentialInput {
   category?: CredentialCategory;
   /** Tags */
   tags?: string[];
+  /** Custom metadata (key-value pairs) */
+  metadata?: Record<string, string>;
   /** Expiration in days (0 = no expiration) */
   expirationDays?: number;
   /** Rotation reminder in days */
@@ -134,6 +139,8 @@ export interface UpdateCredentialInput {
   category?: CredentialCategory;
   /** New tags */
   tags?: string[];
+  /** New or updated metadata (merged with existing) */
+  metadata?: Record<string, string>;
   /** New expiration in days */
   expirationDays?: number;
   /** New rotation reminder in days */
@@ -161,6 +168,8 @@ export interface CredentialView {
   description?: string;
   category?: CredentialCategory;
   tags?: string[];
+  /** Custom metadata */
+  metadata?: Record<string, string>;
   expiresAt?: Date;
   rotateAfterDays?: number;
   lastRotatedAt?: Date;

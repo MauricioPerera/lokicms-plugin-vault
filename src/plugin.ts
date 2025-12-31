@@ -135,6 +135,7 @@ function registerMcpTools(api: PluginAPI): void {
           status: c.status,
           expiresAt: c.expiresAt,
           lastRotatedAt: c.lastRotatedAt,
+          metadata: c.metadata,
           value: c.value, // Always masked
         })),
       };
@@ -153,6 +154,7 @@ function registerMcpTools(api: PluginAPI): void {
       environment: z.string().describe('Environment (dev, staging, prod)'),
       description: z.string().optional().describe('Human-readable description'),
       category: z.enum(CREDENTIAL_CATEGORIES as unknown as [string, ...string[]]).optional(),
+      metadata: z.record(z.string()).optional().describe('Custom metadata key-value pairs'),
       expirationDays: z.number().optional().describe('Days until expiration (0 = never)'),
       rotateAfterDays: z.number().optional().describe('Days until rotation reminder'),
     }),
@@ -163,6 +165,7 @@ function registerMcpTools(api: PluginAPI): void {
       environment: string;
       description?: string;
       category?: CredentialCategory;
+      metadata?: Record<string, string>;
       expirationDays?: number;
       rotateAfterDays?: number;
     }) => {
@@ -181,6 +184,7 @@ function registerMcpTools(api: PluginAPI): void {
             environment: input.environment,
             description: input.description,
             category: input.category,
+            metadata: input.metadata,
             expirationDays: input.expirationDays,
             rotateAfterDays: input.rotateAfterDays,
           },
@@ -196,6 +200,7 @@ function registerMcpTools(api: PluginAPI): void {
             project: credential.project,
             environment: credential.environment,
             status: credential.status,
+            metadata: credential.metadata,
             value: credential.value, // Masked
           },
           message: `Credential "${input.name}" created and encrypted securely`,
@@ -218,6 +223,7 @@ function registerMcpTools(api: PluginAPI): void {
       id: z.string().describe('Credential ID'),
       description: z.string().optional(),
       category: z.enum(CREDENTIAL_CATEGORIES as unknown as [string, ...string[]]).optional(),
+      metadata: z.record(z.string()).optional().describe('Custom metadata to add/update (merged with existing)'),
       expirationDays: z.number().optional(),
       rotateAfterDays: z.number().optional(),
       isActive: z.boolean().optional(),
@@ -226,6 +232,7 @@ function registerMcpTools(api: PluginAPI): void {
       id: string;
       description?: string;
       category?: CredentialCategory;
+      metadata?: Record<string, string>;
       expirationDays?: number;
       rotateAfterDays?: number;
       isActive?: boolean;
@@ -242,6 +249,7 @@ function registerMcpTools(api: PluginAPI): void {
           {
             description: input.description,
             category: input.category,
+            metadata: input.metadata,
             expirationDays: input.expirationDays,
             rotateAfterDays: input.rotateAfterDays,
             isActive: input.isActive,

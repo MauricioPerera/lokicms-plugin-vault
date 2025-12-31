@@ -137,6 +137,7 @@ export class CredentialVault {
       description: input.description,
       category: input.category,
       tags: input.tags,
+      metadata: input.metadata,
       expiresAt,
       rotateAfterDays: input.rotateAfterDays ?? this.config.defaultRotationDays,
       lastRotatedAt: new Date(),
@@ -199,6 +200,15 @@ export class CredentialVault {
     if (input.tags !== undefined) {
       changes.tags = { from: credential.tags, to: input.tags };
       credential.tags = input.tags;
+    }
+
+    if (input.metadata !== undefined) {
+      changes.metadata = { from: credential.metadata, to: input.metadata };
+      // Merge with existing metadata
+      credential.metadata = {
+        ...credential.metadata,
+        ...input.metadata,
+      };
     }
 
     if (input.expirationDays !== undefined) {
@@ -641,6 +651,7 @@ export class CredentialVault {
       description: credential.description,
       category: credential.category,
       tags: credential.tags,
+      metadata: credential.metadata,
       expiresAt: credential.expiresAt,
       rotateAfterDays: credential.rotateAfterDays,
       lastRotatedAt: credential.lastRotatedAt,
